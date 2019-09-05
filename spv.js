@@ -58,11 +58,12 @@ const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
     console.log('TX added to wallet DB!');
   });
 
-  pool.on('block', (block) => {
-    console.log('Received Block:\n', tx);
+  pool.on('block', async (block) => {
+    console.log('Received Block:\n', block);
 
-    walletdb.addBlock(block);
+    await walletdb.addBlock(block);
     console.log('Block added to wallet DB!');
+    console.log("Balance:", await wallet.getBalance());
   });
 
   wallet.on('balance', (balance) => {
@@ -81,7 +82,7 @@ const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
   await bitcoinClient.generate(1);
   await new Promise(r => setTimeout(r, 1000));
   await bitcoinClient.generate(1);
-  console.log("Balance:", wallet.getBalance());
+  console.log("Balance:", await wallet.getBalance());
 
 })().catch((err) => {
   console.error(err.stack);

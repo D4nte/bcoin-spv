@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "docker-compose up -d && sleep 3 && node spv.js || docker-compose rm -sfv",
-    "stop": "docker-compose rm -sfv"
+    "start": "docker-compose up -d && sleep 3 && node spv.js ; docker-compose rm -sfv",
+    "clean": "docker-compose rm -sfv"
   },
   "license": "MIT",
   "dependencies": {
