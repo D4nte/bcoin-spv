@@ -1,0 +1,15 @@
+{
+  "name": "spv",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "docker-compose up -d && sleep 3 && node spv.js || docker-compose rm -sfv",
+    "stop": "docker-compose rm -sfv"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bcoin": "https://github.com/bcoin-org/bcoin.git#75722469f3a3963bb2163bbc4edc763e6bdcf55f",
+    "bitcoin-core": "^2.2.0",
+    "blgr": "^0.1.7"
+  }
+}
