@@ -20,59 +20,59 @@ const BITCOIN_AUTH = {
 
 const bitcoinClient = new Client(BITCOIN_AUTH);
 
-// SPV chains only store the chain headers.
-const chain = new bcoin.Chain({
-  spv: true,
-  logger: logger
-});
-
-const pool = new bcoin.Pool({
-  chain: chain,
-  maxOutbound: 1,
-  logger: logger
+const node = new bcoin.SPVNode({
+  network:'regtest',
+  logger,
+  memory: true
 });
 
 const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
 
 (async () => {
-  await pool.open();
+  await node.open();
   await walletdb.open();
-  await chain.open();
-  await pool.connect();
+  await node.connect();
 
   const wallet = await walletdb.create({logger: logger});
   const walletAddress = await wallet.receiveAddress();
   console.log('Created wallet with address %s', walletAddress);
 
   // Add our address to the SPV filter.
-  pool.watchAddress(walletAddress);
+  node.pool.watchAddress(walletAddress);
 
   // Start the blockchain sync.
-  pool.startSync();
+  node.startSync();
 
   // Get ready to receive transactions!
-  pool.on('tx', (tx) => {
+  node.on('tx', (tx) => {
     console.log('Received TX:\n', tx);
 
     walletdb.addTX(tx);
     console.log('TX added to wallet DB!');
   });
 
-  pool.on('block', async (block) => {
+  node.on('block', async (block) => {
     console.log('Received Block:\n', block);
 
     await walletdb.addBlock(block);
     console.log('Block added to wallet DB!');
     console.log("Balance:", await wallet.getBalance());
+
+    if (block.txs.length > 0) {
+      block.txs.forEach((tx) => {
+        walletdb.addTX(tx);
+        console.log('TX added to wallet DB!');
+      })
+    }
   });
 
   wallet.on('balance', (balance) => {
     console.log('Balance updated:\n', balance.toJSON());
   });
 
-  const netAddr = await pool.hosts.addNode('127.0.0.1:18444');
-  const peer = pool.createOutbound(netAddr);
-  pool.peers.add(peer);
+  const netAddr = await node.pool.hosts.addNode('127.0.0.1:18444');
+  const peer = node.pool.createOutbound(netAddr);
+  node.pool.peers.add(peer);
 
   console.log("Peers:", await bitcoinClient.getPeerInfo());
 
