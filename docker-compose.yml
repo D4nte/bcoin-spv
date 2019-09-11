@@ -13,6 +13,7 @@ services:
       -zmqpubrawblock=tcp://*:28332
       -zmqpubrawtx=tcp://*:28333
       -acceptnonstdtxn=0
+      -txindex
     ports:
       - "18443:18443"
       - "18444:18444"

@@ -59,8 +59,6 @@ const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
   });
 
   pool.on("block", async block => {
-    console.log("Received Block:\n", block);
-
     await walletdb.addBlock(block);
     console.log("Block added to wallet DB!");
     console.log("Balance:", await wallet.getBalance());
@@ -84,12 +82,33 @@ const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
   console.log("Peers:", await bitcoinClient.getPeerInfo());
 
   await bitcoinClient.generate(101);
-  const tx = await bitcoinClient.sendToAddress(walletAddress.toString(), 0.9);
-  console.log("Transaction:", tx);
+  const fundingTxId = await bitcoinClient.sendToAddress(
+    walletAddress.toString(),
+    0.9
+  );
+  console.log("Transaction:", fundingTxId);
   await bitcoinClient.generate(1);
+  const rawFundingTx = await bitcoinClient.getRawTransaction(fundingTxId);
+  console.log("rawFundingTx:", rawFundingTx);
   await new Promise(r => setTimeout(r, 1000));
   await bitcoinClient.generate(1);
   console.log("Balance:", await wallet.getBalance());
+
+  const tx = await wallet.send({
+    witness: true,
+    outputs: [
+      {
+        address:
+          "bcrt1qp6xfd6qnun0v8ztd0jne8yve0cf2uyxaxn4mmd0akvd7ccyy49msg56d4u",
+        value: 15000
+      }
+    ]
+  });
+  console.log("Bcoin tx hash:", tx.txid());
+  await new Promise(r => setTimeout(r, 10000));
+
+  const rawtx = await bitcoinClient.getRawTransaction(tx.txid());
+  console.log("rawtx:", rawtx);
 })().catch(err => {
   console.error(err.stack);
   process.exit(1);
