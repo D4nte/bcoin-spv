@@ -41,6 +41,7 @@ const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
   await pool.connect();
 
   const wallet = await walletdb.create({ logger: logger });
+  wallet.logger = logger;
   const walletAddress = await wallet.receiveAddress();
   console.log("Created wallet with address %s", walletAddress);
 
@@ -104,6 +105,7 @@ const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
       }
     ]
   });
+  await pool.broadcast(tx);
   console.log("Bcoin tx hash:", tx.txid());
   await new Promise(r => setTimeout(r, 10000));
 
