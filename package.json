@@ -4,12 +4,16 @@
   "main": "index.js",
   "scripts": {
     "start": "docker-compose up -d && sleep 3 && node spv.js ; docker-compose rm -sfv",
-    "clean": "docker-compose rm -sfv"
+    "clean": "docker-compose rm -sfv",
+    "fix": "prettier --write '**/*.{ts,js,json,yml}'"
   },
   "license": "MIT",
   "dependencies": {
     "bcoin": "https://github.com/bcoin-org/bcoin.git#75722469f3a3963bb2163bbc4edc763e6bdcf55f",
     "bitcoin-core": "^2.2.0",
     "blgr": "^0.1.7"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
   }
 }
