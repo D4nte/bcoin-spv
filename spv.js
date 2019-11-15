@@ -26,6 +26,9 @@ const node = new bcoin.SPVNode({
   memory: true
 });
 
+// We do not need the RPC interface
+node.rpc = null;
+
 const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
 
 (async () => {
