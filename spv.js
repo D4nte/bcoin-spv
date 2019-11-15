@@ -23,13 +23,18 @@ const bitcoinClient = new Client(BITCOIN_AUTH);
 const node = new bcoin.SPVNode({
   network: "regtest",
   logger,
-  memory: true
+  memory: false,
+  prefix: "./bcoin"
 });
 
 // We do not need the RPC interface
 node.rpc = null;
 
-const walletdb = new bcoin.wallet.WalletDB({ memory: true, logger: logger });
+const walletdb = new bcoin.wallet.WalletDB({
+  memory: false,
+  prefix: "./bcoin",
+  logger: logger
+});
 
 (async () => {
   await node.open();
