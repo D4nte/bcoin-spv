@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bcoin": "https://github.com/bcoin-org/bcoin.git#75722469f3a3963bb2163bbc4edc763e6bdcf55f",
+    "bcoin": "https://github.com/bcoin-org/bcoin.git#2148e6bd972c72304e905a45bab12bfb797d2c75",
     "bitcoin-core": "^2.2.0",
     "blgr": "^0.1.7"
   },
