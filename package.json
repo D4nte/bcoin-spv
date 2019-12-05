@@ -4,6 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "docker-compose up -d && sleep 3 && node spv.js ; docker-compose rm -sfv",
+    "setup": "docker-compose up",
+    "run": "node spv.js",
     "clean": "docker-compose rm -sfv",
     "fix": "prettier --write '**/*.{ts,js,json,yml}'"
   },
