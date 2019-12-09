@@ -1,7 +1,7 @@
 "use strict";
 
 const bcoin = require("bcoin");
-const {NodeClient, Network} = require('bcoin');
+const { NodeClient, Network } = require("bcoin");
 const Client = require("bitcoin-core");
 
 const networkStr = "regtest";
@@ -16,7 +16,6 @@ const BITCOIN_AUTH = {
 
 const bitcoinClient = new Client(BITCOIN_AUTH);
 
-
 const Logger = require("blgr");
 
 const info_logger = new Logger({
@@ -30,7 +29,6 @@ const debug_logger = new Logger({
 
 bcoin.set(networkStr);
 
-
 let walletPlugin = bcoin.wallet.plugin;
 const node = new bcoin.SPVNode({
   network: networkStr,
@@ -40,13 +38,13 @@ const node = new bcoin.SPVNode({
   logFile: true,
   logConsole: true,
   logger: debug_logger,
-  db: 'leveldb',
+  db: "leveldb",
   memory: false,
   persistent: true,
   workers: true,
   listen: true,
   loader: require,
-  config: {wallet: {witness: true}},
+  config: { wallet: { witness: true } }
   // plugins: [
   //   walletPlugin
   // ]
@@ -55,7 +53,6 @@ const node = new bcoin.SPVNode({
 // We do not need the RPC interface
 node.rpc = null;
 
-
 const pool = new bcoin.Pool({
   chain: node.chain,
   spv: true,
@@ -63,7 +60,6 @@ const pool = new bcoin.Pool({
 });
 
 node.pool = pool;
-
 
 // let walletdb;
 
@@ -75,16 +71,14 @@ node.pool = pool;
 
 const walletdb = new bcoin.wallet.WalletDB({
   memory: false,
-  location: "/Users/bonomat/.bcoin/"+networkStr+ "/wallet",
+  location: "/Users/bonomat/.bcoin/" + networkStr + "/wallet",
   spv: true,
   witness: true,
   network: networkStr,
-  logger: debug_logger,
+  logger: debug_logger
 });
 
-
 (async () => {
-
   // Validate the prefix directory (probably ~/.bcoin)
   await node.ensure();
 
@@ -109,7 +103,8 @@ const walletdb = new bcoin.wallet.WalletDB({
   wallet = await walletdb.ensure({
     debug_logger,
     network: networkStr,
-    master: "tprv8ZgxMBicQKsPe88gN4spNLbFefuiMfgEMYrJJxAdAQNr8VAMmnRGYexSRmifZqmhh444Qzh1D9npLdcM7uPXDHwEVVUqC2EcGniPsRnCqpk",
+    master:
+      "tprv8ZgxMBicQKsPe88gN4spNLbFefuiMfgEMYrJJxAdAQNr8VAMmnRGYexSRmifZqmhh444Qzh1D9npLdcM7uPXDHwEVVUqC2EcGniPsRnCqpk",
     witness: true,
     id: "primary"
   });
@@ -156,24 +151,39 @@ const walletdb = new bcoin.wallet.WalletDB({
         console.log("TX added to wallet DB!");
       });
     }
-    console.log("----------inbanace walletdb balance" + JSON.stringify(await wallet.getBalance()));
+    console.log(
+      "----------inbanace walletdb balance" +
+        JSON.stringify(await wallet.getBalance())
+    );
   });
 
   node.on("tip", async entry => {
     console.log("----------tip Found tip:\n", entry);
 
-    console.log("----------tip walletdb state" + JSON.stringify(await walletdb.getState()));
+    console.log(
+      "----------tip walletdb state" + JSON.stringify(await walletdb.getState())
+    );
 
-    console.log("----------tip walletdb tip" + JSON.stringify(await walletdb.getTip()));
+    console.log(
+      "----------tip walletdb tip" + JSON.stringify(await walletdb.getTip())
+    );
   });
 
   wallet.on("balance", async balance => {
     console.log("Balance updated:\n", balance.toJSON());
-    console.log("----------inbanace walletdb state" + JSON.stringify(await walletdb.getState()));
+    console.log(
+      "----------inbanace walletdb state" +
+        JSON.stringify(await walletdb.getState())
+    );
 
-    console.log("----------inbanace walletdb tip" + JSON.stringify(await walletdb.getTip()));
-    console.log("----------inbanace walletdb balance" + JSON.stringify(await wallet.getBalance()));
-
+    console.log(
+      "----------inbanace walletdb tip" +
+        JSON.stringify(await walletdb.getTip())
+    );
+    console.log(
+      "----------inbanace walletdb balance" +
+        JSON.stringify(await wallet.getBalance())
+    );
   });
 
   // Start the blockchain sync.
@@ -191,9 +201,13 @@ const walletdb = new bcoin.wallet.WalletDB({
   // await node.scan(1610000);
   // await walletdb.scan(1610000);
 
-  console.log("----------walletdb state" + JSON.stringify(await walletdb.getState()));
+  console.log(
+    "----------walletdb state" + JSON.stringify(await walletdb.getState())
+  );
 
-  console.log("----------walletdb tip" + JSON.stringify(await walletdb.getTip()));
+  console.log(
+    "----------walletdb tip" + JSON.stringify(await walletdb.getTip())
+  );
   console.log("----------wallet balance: ", await wallet.getBalance());
   console.log("----------Getting the tip", await walletdb.getTip());
   // const tip = await client.getTip();
@@ -204,7 +218,6 @@ const walletdb = new bcoin.wallet.WalletDB({
   console.log("----------wallet getCredits: ", await wallet.getCredits());
   console.log("----------wallet getHistory: ", await wallet.getHistory());
 
-
   // const block = await walletdb.getBlock(1600000);
   // console.log(block);
   // await walletdb.setTip(block);
@@ -213,8 +226,8 @@ const walletdb = new bcoin.wallet.WalletDB({
   await new Promise(r => setTimeout(r, 5000));
 
   const fundingTxId = await bitcoinClient.sendToAddress(
-      walletAddress.toString(),
-      0.9
+    walletAddress.toString(),
+    0.9
   );
   console.log("Transaction:", fundingTxId);
   await bitcoinClient.generate(1);
@@ -240,7 +253,6 @@ const walletdb = new bcoin.wallet.WalletDB({
 
   console.log("Bcoin tx hash:", tx.txid());
   console.log("Balance:", await wallet.getBalance());
-
 })().catch(err => {
   console.error(err.stack);
   process.exit(1);
