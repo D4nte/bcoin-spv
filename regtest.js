@@ -80,7 +80,7 @@ const walletdb = new bcoin.wallet.WalletDB({
     debug_logger: logger,
     network: networkStr,
     master:
-        "tprv8ZgxMBicQKsPe88gN4spNLbFefuiMfgEMYrJJxAdAQNr8VAMmnRGYexSRmifZqmhh444Qzh1D9npLdcM7uPXDHwEVVUqC2EcGniPsRnCqpk",
+      "tprv8ZgxMBicQKsPe88gN4spNLbFefuiMfgEMYrJJxAdAQNr8VAMmnRGYexSRmifZqmhh444Qzh1D9npLdcM7uPXDHwEVVUqC2EcGniPsRnCqpk",
     witness: true,
     id: "primary"
   });
@@ -135,8 +135,8 @@ const walletdb = new bcoin.wallet.WalletDB({
   await new Promise(r => setTimeout(r, 10000));
 
   const fundingTxId = await bitcoinClient.sendToAddress(
-      walletAddress.toString(),
-      0.9
+    walletAddress.toString(),
+    0.9
   );
   console.log("Transaction:", fundingTxId);
   await bitcoinClient.generate(1);
@@ -151,7 +151,7 @@ const walletdb = new bcoin.wallet.WalletDB({
     outputs: [
       {
         address:
-            "bcrt1qp6xfd6qnun0v8ztd0jne8yve0cf2uyxaxn4mmd0akvd7ccyy49msg56d4u",
+          "bcrt1qp6xfd6qnun0v8ztd0jne8yve0cf2uyxaxn4mmd0akvd7ccyy49msg56d4u",
         value: 10000
       }
     ]
