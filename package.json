@@ -5,7 +5,7 @@
   "scripts": {
     "regtest": "docker-compose up -d && sleep 3 && node regtest.js ; docker-compose rm -sfv",
     "setup": "docker-compose up",
-    "testnet": "node spv.js",
+    "testnet": "node testnet.js",
     "clean": "docker-compose rm -sfv",
     "fix": "prettier --write '**/*.{ts,js,json,yml}'"
   },
