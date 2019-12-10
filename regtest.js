@@ -56,7 +56,7 @@ node.pool = pool;
 
 const walletdb = new bcoin.wallet.WalletDB({
   memory: false,
-  location: "/Users/bonomat/.bcoin/" + networkStr + "/wallet",
+  location: ".bcoin/" + networkStr + "/wallet",
   spv: true,
   witness: true,
   network: networkStr,
